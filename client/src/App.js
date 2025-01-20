@@ -1,23 +1,89 @@
-import logo from './logo.svg';
+import React, { useEffect, useState, useCallback } from 'react';
+import axios from 'axios';
+import logo from './dog.svg';
 import './App.css';
+import CustomButton from './components/CustomButton.js';
+import Dog from './components/Dog.js';
 
 function App() {
+  const [data, setData] = useState([]);
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
+
+  const getDogs = useCallback(async () => {
+    const data = await axios.get('http://localhost:3001/api/data')
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+    setData(data);
+  }, [])
+
+  useEffect(() => {
+    getDogs()
+    .catch(console.error);
+  }, [getDogs]);
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.post('http://localhost:3001/api/data', { name, age })
+      .then(response => {
+        setData([...data, response.data]);
+        setName('');
+        setAge('');
+      })
+      .catch(error => {
+        console.error('Error submitting data:', error);
+      });
+  };
+
+  const handleDelete = (id) => {
+
+    axios.delete(`http://localhost:3001/api/data/${id}`)
+      .then(() => {
+        getDogs();
+      })
+      .catch(error => {
+        console.error('Error submitting data:', error);
+      });
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div className='App-header'>DOGS!</div>
       </header>
+    
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={name}
+          placeholder="Name"
+          onChange={e => setName(e.target.value)}
+        />
+        <input
+          type="number"
+          value={age}
+          placeholder="Age"
+          onChange={e => setAge(e.target.value)}
+        />
+        <CustomButton type="submit">ADD</CustomButton>
+      </form>
+
+      <h2>Fetched Data:</h2>
+      <ul>
+        {data ? data.map((item) => (
+          <li key={item.id} className='Dog-List'>
+            <Dog dog={item} />
+            <CustomButton onClick={e => handleDelete(item.id)}>DELETE</CustomButton>
+          </li>
+        )):
+        <div>No Data</div>}
+      </ul>
     </div>
   );
 }
