@@ -9,6 +9,7 @@ function App() {
   const [data, setData] = useState([]);
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
+  const [breeds, setBreeds] = useState([]);
 
   const getDogs = useCallback(async () => {
     const data = await axios.get('http://localhost:3001/api/data')
@@ -21,10 +22,23 @@ function App() {
     setData(data);
   }, [])
 
+  const getBreeds = useCallback(async () => { 
+    const breeds = await axios.get('http://localhost:3001/api/breeds')
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Error fetching breeds:', error);
+    });
+    setBreeds(breeds);
+  }, [])
+
   useEffect(() => {
     getDogs()
     .catch(console.error);
-  }, [getDogs]);
+    getBreeds()
+    .catch(console.error);
+  }, [getDogs, getBreeds]);
 
 
   const handleSubmit = (e) => {
@@ -50,6 +64,11 @@ function App() {
         console.error('Error submitting data:', error);
       });
   };
+
+
+  function dogBreedName(breedId, breeds) {
+    return breeds?.find(breed => breed.id === breedId)?.name || null;
+  }
 
   return (
     <div className="App">
@@ -78,7 +97,7 @@ function App() {
       <ul>
         {data ? data.map((item) => (
           <li key={item.id} className='Dog-List'>
-            <Dog dog={item} />
+            <Dog dog={item} breedName={dogBreedName(item.breed_id, breeds)} />
             <CustomButton onClick={e => handleDelete(item.id)}>DELETE</CustomButton>
           </li>
         )):

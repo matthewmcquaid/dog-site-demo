@@ -16,5 +16,12 @@ describe('Dog', () => {
         render(<Dog dog={dog} />);
         expect(screen.getByText(/3 years old/i)).toBeInTheDocument();
     });
+
+    it('renders the correct breed name', () => {
+        const dog = { name: 'Fido', age: 3 };
+        const breedName = 'Golden Retriever';
+        render(<Dog dog={dog} breedName={breedName} />);
+        expect(screen.getByText(/golden retriever/i)).toBeInTheDocument();
+    });
     
 });

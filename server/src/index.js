@@ -8,6 +8,7 @@ import cors from 'cors';
 import getDogs from './routes/getDogs.js';
 import postDogs from './routes/postDogs.js';
 import deleteDog from './routes/deleteDog.js';
+import getBreeds from './routes/getBreeds.js';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 app.get('/api/data', getDogs);
 app.post('/api/data', postDogs);
 app.delete('/api/data/:id', deleteDog);
+app.get('/api/breeds', getBreeds);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
