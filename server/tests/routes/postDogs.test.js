@@ -14,7 +14,8 @@ describe('POST Dog Route', () => {
         request = {
             body: {
                 name: 'Test Dog',
-                age: 7
+                age: 7,
+                breed_id: 1
             }
         };
 
@@ -37,7 +38,8 @@ describe('POST Dog Route', () => {
         const mockResult = [{
             id: 4, 
             name: request.body.name, 
-            age: request.body.age
+            age: request.body.age,
+            breed_id: request.body.breed_id
         }]; 
         
         dbPool.query.resolves(mockResult);  
@@ -45,15 +47,17 @@ describe('POST Dog Route', () => {
         await postDogTest(request, response);
 
         expect(dbPool.query.calledOnce).to.be.true;
-        expect(dbPool.query.lastCall.args[0]).to.equal('INSERT INTO our_dogs (name, age) VALUES ($1, $2) RETURNING *');
+        expect(dbPool.query.lastCall.args[0]).to.equal('INSERT INTO our_dogs (name, age, breed_id) VALUES ($1, $2, $3) RETURNING *');
         expect(dbPool.query.lastCall.args[1][0]).to.equal(request.body.name);
         expect(dbPool.query.lastCall.args[1][1]).to.equal(request.body.age);
+        expect(dbPool.query.lastCall.args[1][2]).to.equal(request.body.breed_id);
+
 
         expect(response.json.calledOnce).to.be.true;
         expect(response.json.args[0][0].id).to.equal(mockResult[0].id);
         expect(response.json.args[0][0].name).to.equal(mockResult[0].name);
         expect(response.json.args[0][0].age).to.equal(mockResult[0].age);
-       
+       expect(response.json.args[0][0].breed_id).to.equal(mockResult[0].breed_id);
     });
 
     it('should return a 500 status code when there is a database error', async () => {
