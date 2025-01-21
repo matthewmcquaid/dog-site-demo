@@ -86,7 +86,7 @@ function Dashboard() {
     }
 
     return (
-        <div className="Dashboard">
+        <div className='Dashboard'>
             <DogForm name={name} age={age} breed={breed} breeds={breeds} handleSubmit={handleSubmit} setName={setName} setBreed={setBreed} setAge={setAge} />
             <DogList data={data} breeds={breeds} dogBreedName={dogBreedName} handleDelete={handleDelete} />
         </div>

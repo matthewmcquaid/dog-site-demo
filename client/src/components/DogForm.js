@@ -26,7 +26,7 @@ const DogForm = ({ name, age, breed, breeds, handleSubmit, setName, setBreed, se
                     </option>
                     ))}
                 </select>
-                <CustomButton type='submit' onClick={handleSubmit}>ADD</CustomButton>
+                <CustomButton type='submit' onClick={handleSubmit} testId={'add-button'}>ADD</CustomButton>
             </form>
         </>
     )

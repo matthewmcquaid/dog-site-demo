@@ -25,13 +25,14 @@ const useStyles = makeStyles({
   },
 });
 
-const CustomButton = ({ variant = 'primary', children, onClick }) => {
+const CustomButton = ({ variant = 'primary', children, onClick, testId }) => {
   const classes = useStyles();
   return (
     <MaterialButton
       className={`${classes.root} ${classes[variant]}`}
       onClick={onClick}
       variant='contained'
+      data-testid={testId}
     >
       {children}
     </MaterialButton>

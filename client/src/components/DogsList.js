@@ -8,9 +8,9 @@ const DogList = ({ data, breeds, handleDelete, dogBreedName }) => {
             <h2>Fetched Data:</h2>
             <ul>
                 {data ? data.map((item) => (
-                <li key={item.id} className='Dog-List'>
+                <li key={item.id} className='Dog-List' data-testid='dog'>
                     <Dog dog={item} breedName={dogBreedName(item.breed_id, breeds)} />
-                    <CustomButton onClick={e => handleDelete(item.id)}>DELETE</CustomButton>
+                    <CustomButton id={item.id} onClick={e => handleDelete(item.id)} testId={'delete-button'} >DELETE</CustomButton>
                 </li>
                 )):
                 <div>No Data</div>}
